@@ -1,12 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+let express = require ('express');
+let app = express ();
+let personRoute = require('./routes/person');
+let customerRoute = require('./routes/customer');
+let bodyParser = require('body-parser');
 
-ReactDOM.render(<App />, document.getElementById('root'));
+app.use(bodyParser.json())
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+app.use((req, res, next) => {
+    console.log(`${new Date().toString()} => ${req.bodyl}`)
+    next()
+})
+app.use(personRoute)
+app.use(customerRoute)
+app.use(express.static('public'))
+
+app.use((req, res, next) =>{
+    res.status(404).send('I thinky your losty')
+})
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => console.info('Service has started on ' + PORT)) 
